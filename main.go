@@ -2,15 +2,20 @@ package main
 
 import (
 	"log"
-	"os"
 
-	"github.com/Gileno29/etl_startup/utils"
+	"github.com/Gileno29/etl_startup/commands"
 	"github.com/joho/godotenv"
+	"github.com/spf13/cobra"
 )
 
 var (
 	GITHUB_PATH = "PATH_TO_REPOSITORY"
 )
+
+var rootCommand = &cobra.Command{
+	Use:   "ETL Maker",
+	Short: "Uma aplicação CLI para criação de projetos ETL",
+}
 
 func main() {
 	err := godotenv.Load()
@@ -18,10 +23,15 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	err = utils.UpdateRepository(os.Getenv(GITHUB_PATH))
+	/*err = utils.UpdateRepository(os.Getenv(GITHUB_PATH))
 	if err != nil {
 		log.Fatal("Erro ao atualizar repositorio")
 
-	}
+	}*/
+	cmd, _ := commands.SetupMkauth()
+
+	rootCommand.AddCommand(cmd)
+
+	rootCommand.Execute()
 
 }
