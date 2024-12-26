@@ -13,7 +13,7 @@ var (
 )
 
 var rootCommand = &cobra.Command{
-	Use:   "ETL Maker",
+	Use:   "etl",
 	Short: "Uma aplicação CLI para criação de projetos ETL",
 }
 

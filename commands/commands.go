@@ -19,6 +19,11 @@ var projectPath string
 func LoadComands() []*cobra.Command {
 	setupMkauth()
 	setupTopsapp()
+	setupReceitanet()
+	setupIXC()
+	setupProvap()
+	setupVigo()
+	setupQuazar()
 
 	return comands
 }
@@ -49,17 +54,17 @@ func setupMkauth() {
 				fmt.Println("erro ao copiar arquivos de SQL ", err)
 				return
 			}
-			err = utils.CopyFile(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Mkauth/new_step.sh", "./step.sh")
+			err = utils.CopyFile(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Mkauth/step.sh", projectPath+"/step.sh")
 			if err != nil {
 				fmt.Println("erro ao copiar arquivo de step ", err)
 				return
 			}
-			err = utils.CopyFile(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Mkauth/import_mkauth.py", "./import_mkauth.py")
+			err = utils.CopyFile(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Mkauth/import_mkauth.py", projectPath+"/import_mkauth.py")
 			if err != nil {
 				fmt.Println("erro ao copiar arquivo de importacao ")
 				return
 			}
-			os.Chmod("./step.sh", 0755)
+			os.Chmod(projectPath+"/step.sh", 0755)
 
 		},
 	}
@@ -85,7 +90,131 @@ func setupTopsapp() {
 				fmt.Println("erro ao copiar arquivos do topsapp ", err)
 				return
 			}
-			os.Chmod("./step.sh", 0755)
+			os.Chmod(projectPath+"/step.sh", 0755)
+
+		},
+	}
+	cmd.Flags().StringVarP(&projectPath, "path", "p", "", "caminho para o diretorios de criação")
+	comands = append(comands, cmd)
+}
+
+func setupReceitanet() {
+	var cmd = &cobra.Command{
+		Use:   "receitanet",
+		Short: "Cria a estrutura de diretorios e os arquivos para o ETL do receitanet",
+		Run: func(cmd *cobra.Command, args []string) {
+			// validations
+			if projectPath == "" {
+				fmt.Println("É necessário passar o path para o ambiente.")
+				return
+			}
+
+			fmt.Println("Criando estruturas de diretorio")
+			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Receitanet/", projectPath)
+			if err != nil {
+				fmt.Println("erro ao copiar arquivos do topsapp ", err)
+				return
+			}
+			os.Chmod(projectPath+"/step.sh", 0755)
+
+		},
+	}
+	cmd.Flags().StringVarP(&projectPath, "path", "p", "", "caminho para o diretorios de criação")
+	comands = append(comands, cmd)
+}
+func setupIXC() {
+	var cmd = &cobra.Command{
+		Use:   "ixc",
+		Short: "Cria a estrutura de diretorios e os arquivos para o ETL do IXC",
+		Run: func(cmd *cobra.Command, args []string) {
+			// validations
+			if projectPath == "" {
+				fmt.Println("É necessário passar o path para o ambiente.")
+				return
+			}
+
+			fmt.Println("Criando estruturas de diretorio")
+			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/IXCSoft/", projectPath)
+			if err != nil {
+				fmt.Println("erro ao copiar arquivos do topsapp ", err)
+				return
+			}
+			os.Chmod(projectPath+"/step.sh", 0755)
+
+		},
+	}
+	cmd.Flags().StringVarP(&projectPath, "path", "p", "", "caminho para o diretorios de criação")
+	comands = append(comands, cmd)
+}
+
+func setupProvap() {
+	var cmd = &cobra.Command{
+		Use:   "provap",
+		Short: "Cria a estrutura de diretorios e os arquivos para o ETL do IXC",
+		Run: func(cmd *cobra.Command, args []string) {
+			// validations
+			if projectPath == "" {
+				fmt.Println("É necessário passar o path para o ambiente.")
+				return
+			}
+
+			fmt.Println("Criando estruturas de diretorio")
+			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Provap/", projectPath)
+			if err != nil {
+				fmt.Println("erro ao copiar arquivos do topsapp ", err)
+				return
+			}
+			os.Chmod(projectPath+"/step.sh", 0755)
+
+		},
+	}
+	cmd.Flags().StringVarP(&projectPath, "path", "p", "", "caminho para o diretorios de criação")
+	comands = append(comands, cmd)
+}
+
+func setupVigo() {
+	var cmd = &cobra.Command{
+		Use:   "vigo",
+		Short: "Cria a estrutura de diretorios e os arquivos para o ETL do Vigo",
+		Run: func(cmd *cobra.Command, args []string) {
+			// validations
+			if projectPath == "" {
+				fmt.Println("É necessário passar o path para o ambiente.")
+				return
+			}
+
+			fmt.Println("Criando estruturas de diretorio")
+			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Vigo/", projectPath)
+			if err != nil {
+				fmt.Println("erro ao copiar arquivos do topsapp ", err)
+				return
+			}
+			os.Chmod(projectPath+"/step.sh", 0755)
+
+		},
+	}
+	cmd.Flags().StringVarP(&projectPath, "path", "p", "", "caminho para o diretorios de criação")
+	comands = append(comands, cmd)
+}
+
+func setupQuazar() {
+	var cmd = &cobra.Command{
+		Use:   "quazar",
+		Short: "Cria a estrutura de diretorios e os arquivos para o ETL do Quazar",
+		Run: func(cmd *cobra.Command, args []string) {
+			// validations
+			if projectPath == "" {
+				fmt.Println("É necessário passar o path para o ambiente.")
+				return
+			}
+
+			fmt.Println("Criando estruturas de diretorio")
+			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Quazar/", projectPath)
+			if err != nil {
+				fmt.Println("erro ao copiar arquivos do topsapp ", err)
+				return
+			}
+			os.Chmod(projectPath+"/step.sh", 0755)
 
 		},
 	}
