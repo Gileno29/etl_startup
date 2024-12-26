@@ -76,18 +76,19 @@ func CopyAllFiles(srcDir, dstDir string) error {
 	}
 
 	// Iterar sobre os arquivos e copiá-los
+	fmt.Printf("Copiando arquivos...")
 	for _, file := range files {
 		if !file.IsDir() { // Ignorar subdiretórios
 			srcPath := filepath.Join(srcDir, file.Name())
 			dstPath := filepath.Join(dstDir, file.Name())
 
-			fmt.Printf("Copiando %s para %s...\n", srcPath, dstPath)
 			err = CopyFile(srcPath, dstPath)
 			if err != nil {
 				return fmt.Errorf("erro ao copiar o arquivo %s: %w", file.Name(), err)
 			}
 		}
 	}
+	fmt.Printf("Finalizado setup!!")
 
 	return nil
 }
