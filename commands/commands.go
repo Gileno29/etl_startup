@@ -24,6 +24,9 @@ func LoadComands() []*cobra.Command {
 	setupProvap()
 	setupVigo()
 	setupQuazar()
+	setupLFAdmin()
+	setupISPfy()
+	setupISPcloud()
 
 	return comands
 }
@@ -112,7 +115,7 @@ func setupReceitanet() {
 			fmt.Println("Criando estruturas de diretorio")
 			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Receitanet/", projectPath)
 			if err != nil {
-				fmt.Println("erro ao copiar arquivos do topsapp ", err)
+				fmt.Println("erro ao copiar arquivos do Receitanet ", err)
 				return
 			}
 			os.Chmod(projectPath+"/step.sh", 0755)
@@ -136,7 +139,7 @@ func setupIXC() {
 			fmt.Println("Criando estruturas de diretorio")
 			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/IXCSoft/", projectPath)
 			if err != nil {
-				fmt.Println("erro ao copiar arquivos do topsapp ", err)
+				fmt.Println("erro ao copiar arquivos do IXC ", err)
 				return
 			}
 			os.Chmod(projectPath+"/step.sh", 0755)
@@ -161,7 +164,7 @@ func setupProvap() {
 			fmt.Println("Criando estruturas de diretorio")
 			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Provap/", projectPath)
 			if err != nil {
-				fmt.Println("erro ao copiar arquivos do topsapp ", err)
+				fmt.Println("erro ao copiar arquivos do provapp ", err)
 				return
 			}
 			os.Chmod(projectPath+"/step.sh", 0755)
@@ -186,7 +189,7 @@ func setupVigo() {
 			fmt.Println("Criando estruturas de diretorio")
 			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Vigo/", projectPath)
 			if err != nil {
-				fmt.Println("erro ao copiar arquivos do topsapp ", err)
+				fmt.Println("erro ao copiar arquivos do vigo ", err)
 				return
 			}
 			os.Chmod(projectPath+"/step.sh", 0755)
@@ -211,7 +214,82 @@ func setupQuazar() {
 			fmt.Println("Criando estruturas de diretorio")
 			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Quazar/", projectPath)
 			if err != nil {
-				fmt.Println("erro ao copiar arquivos do topsapp ", err)
+				fmt.Println("erro ao copiar arquivos do quazar ", err)
+				return
+			}
+			os.Chmod(projectPath+"/step.sh", 0755)
+
+		},
+	}
+	cmd.Flags().StringVarP(&projectPath, "path", "p", "", "caminho para o diretorios de criação")
+	comands = append(comands, cmd)
+}
+
+func setupLFAdmin() {
+	var cmd = &cobra.Command{
+		Use:   "lfadmin",
+		Short: "Cria a estrutura de diretorios e os arquivos para o ETL do LFAdmin",
+		Run: func(cmd *cobra.Command, args []string) {
+			// validations
+			if projectPath == "" {
+				fmt.Println("É necessário passar o path para o ambiente.")
+				return
+			}
+
+			fmt.Println("Criando estruturas de diretorio")
+			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/LFAdmin/", projectPath)
+			if err != nil {
+				fmt.Println("erro ao copiar arquivos do ispfy ", err)
+				return
+			}
+			os.Chmod(projectPath+"/step.sh", 0755)
+
+		},
+	}
+	cmd.Flags().StringVarP(&projectPath, "path", "p", "", "caminho para o diretorios de criação")
+	comands = append(comands, cmd)
+}
+
+func setupISPfy() {
+	var cmd = &cobra.Command{
+		Use:   "ispfy",
+		Short: "Cria a estrutura de diretorios e os arquivos para o ETL do ispFy",
+		Run: func(cmd *cobra.Command, args []string) {
+			// validations
+			if projectPath == "" {
+				fmt.Println("É necessário passar o path para o ambiente.")
+				return
+			}
+
+			fmt.Println("Criando estruturas de diretorio")
+			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/Ispfy/", projectPath)
+			if err != nil {
+				fmt.Println("erro ao copiar arquivos do ispfy ", err)
+				return
+			}
+			os.Chmod(projectPath+"/step.sh", 0755)
+
+		},
+	}
+	cmd.Flags().StringVarP(&projectPath, "path", "p", "", "caminho para o diretorios de criação")
+	comands = append(comands, cmd)
+}
+
+func setupISPcloud() {
+	var cmd = &cobra.Command{
+		Use:   "ispcloud",
+		Short: "Cria a estrutura de diretorios e os arquivos para o ETL do IspCloud",
+		Run: func(cmd *cobra.Command, args []string) {
+			// validations
+			if projectPath == "" {
+				fmt.Println("É necessário passar o path para o ambiente.")
+				return
+			}
+
+			fmt.Println("Criando estruturas de diretorio")
+			err := utils.CopyAllFiles(os.Getenv(GITHUB_PATH)+"/Sistemas_Comerciais/IspCloud/", projectPath)
+			if err != nil {
+				fmt.Println("erro ao copiar arquivos do IspCloud ", err)
 				return
 			}
 			os.Chmod(projectPath+"/step.sh", 0755)
