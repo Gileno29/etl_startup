@@ -18,16 +18,11 @@ var rootCommand = &cobra.Command{
 }
 
 func main() {
-	err := godotenv.Load()
+	err := godotenv.Load("/usr/local/bin/.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	/*err = utils.UpdateRepository(os.Getenv(GITHUB_PATH))
-	if err != nil {
-		log.Fatal("Erro ao atualizar repositorio")
-
-	}*/
 	comands := commands.LoadComands()
 	for i := 0; i < len(comands); i++ {
 		rootCommand.AddCommand(comands[i])

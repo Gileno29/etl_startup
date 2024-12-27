@@ -27,6 +27,7 @@ func LoadComands() []*cobra.Command {
 	setupLFAdmin()
 	setupISPfy()
 	setupISPcloud()
+	updateRepo()
 
 	return comands
 }
@@ -297,5 +298,17 @@ func setupISPcloud() {
 		},
 	}
 	cmd.Flags().StringVarP(&projectPath, "path", "p", "", "caminho para o diretorios de criação")
+	comands = append(comands, cmd)
+}
+
+func updateRepo() {
+	var cmd = &cobra.Command{
+		Use:   "update-repo",
+		Short: "Atualiza repositorio",
+		Run: func(cmd *cobra.Command, args []string) {
+			utils.UpdateRepository(os.Getenv(GITHUB_PATH))
+
+		},
+	}
 	comands = append(comands, cmd)
 }
