@@ -1,8 +1,12 @@
 package commands
 
 import (
+	"encoding/csv"
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/Gileno29/etl_startup/utils"
 	"github.com/spf13/cobra"
@@ -15,6 +19,9 @@ var (
 var comands []*cobra.Command
 
 var projectPath string
+var outputfile string
+var delimiter string
+var directory string
 
 func LoadComands() []*cobra.Command {
 	setupMkauth()
@@ -28,6 +35,7 @@ func LoadComands() []*cobra.Command {
 	setupISPfy()
 	setupISPcloud()
 	updateRepo()
+	convertFiles()
 
 	return comands
 }
@@ -306,9 +314,83 @@ func updateRepo() {
 		Use:   "update-repo",
 		Short: "Atualiza repositorio",
 		Run: func(cmd *cobra.Command, args []string) {
+
 			utils.UpdateRepository(os.Getenv(GITHUB_PATH))
 
 		},
 	}
+	comands = append(comands, cmd)
+}
+
+func convertFiles() {
+	var cmd = &cobra.Command{
+		Use:   "convert-file",
+		Short: "Conver um ou vários arquivos para csv com delimitador",
+		Run: func(cmd *cobra.Command, args []string) {
+			// validations
+			if directory == "" {
+				fmt.Println("É necessário passar o path para o ambiente.")
+				return
+			}
+			if outputfile == "" {
+				fmt.Println("É necessário passar o nome do arquivo de saida.")
+				return
+			}
+
+			outFile, err := os.Create(outputfile)
+			if err != nil {
+				log.Fatalf("Erro ao criar o arquivo de saída: %v", err)
+			}
+			defer outFile.Close()
+
+			// Criar o writer para o arquivo CSV com delimitador personalizado
+			writer := csv.NewWriter(outFile)
+			writer.Comma = rune(delimiter[0])
+			defer writer.Flush()
+
+			// Processar os arquivos no diretório
+			err = filepath.Walk(directory, func(path string, info os.FileInfo, err error) error {
+				if err != nil {
+					return err
+				}
+
+				// Ignorar subdiretórios
+				if info.IsDir() {
+					return nil
+				}
+				
+				ext := strings.ToLower(filepath.Ext(info.Name()))
+				
+				switch ext {
+				case ".xls", ".xlsx":
+					err := utils.ProcessExcelFile(path, write, outFile)
+					if err != nil {
+						log.Printf("Erro ao processar o arquivo Excel %s: %v", path, err)
+					}
+				case ".csv":
+					err := utils.ProcessCSVFile(path, writer, outFile)
+					if err != nil {
+						log.Printf("Erro ao processar o arquivo CSV %s: %v", path, err)
+					}
+				case strings.ToLower(filePath.Base())==strings.ToLower(outputfile):
+					log.Printf("Arquivo é o mesmo do output: %s", filePath)
+
+				default:
+					log.Printf("Arquivo ignorado (extensão não suportada): %s", path)
+				}
+				return nil
+			})
+
+			if err != nil {
+				log.Fatalf("Erro ao percorrer o diretório: %v", err)
+			}
+
+			fmt.Println("Processamento concluído. Arquivo de saída gerado:", outputfile)
+
+		},
+	}
+	cmd.Flags().StringVarP(&directory, "path-directory", "p", "", "caminho para o diretorios de criação")
+	cmd.Flags().StringVarP(&outputfile, "output-file", "o", "", "arquivo de saida")
+	cmd.Flags().StringVarP(&delimiter, "delimiter", "d", "", "Delimitador do arquivo")
 	comands = append(comands, cmd)
 }

@@ -1,11 +1,14 @@
 package utils
 
 import (
+	"encoding/csv"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/xuri/excelize/v2"
 )
 
 func UpdateRepository(gitRepo string) error {
@@ -90,5 +93,60 @@ func CopyAllFiles(srcDir, dstDir string) error {
 	}
 	fmt.Printf("Finalizado setup!!")
 
+	return nil
+}
+
+func ProcessCSVFile(filePath string, writer *csv.Writer) error {
+	
+	file, err := os.Open(filePath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	records, err := reader.ReadAll()
+	if err != nil {
+		return err
+	}
+
+	// Ignorar a primeira linha (cabeçalho)
+	for i, record := range records {
+		if i == 0 {
+			continue
+		}
+		if err := writer.Write(record); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func ProcessExcelFile(filePath string, writer *csv.Writer) error {
+
+	f, err := excelize.OpenFile(filePath)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	// Obter todas as abas (planilhas)
+	sheets := f.GetSheetList()
+	for _, sheet := range sheets {
+		rows, err := f.GetRows(sheet)
+		if err != nil {
+			return err
+		}
+
+		// Ignorar a primeira linha (cabeçalho)
+		for i, row := range rows {
+			if i == 0 {
+				continue
+			}
+			if err := writer.Write(row); err != nil {
+				return err
+			}
+		}
+	}
 	return nil
 }
